@@ -102,24 +102,39 @@ def now():
     # B = GetName.find("a", class_="ticket-btn").find_all("title")
     # print(GetName)
     Scores = page.find("ul", class_="lists").find_all("li", class_='srating')
-    print(Scores)
+    # print("=================")
+    # print(Scores)
+    # print("=================")
     # print(Scores.find('span', class_='subject-rate').text)
     Sum = 0
+# 获取电影名
     for Name in GetName:
         Sum += 1
         # print("++++++++++++++++++")
         name = Name.get("alt")
         # if name:  # 只处理非空的 title
         #     texts.append(name)  # 添加有效的 title 到 texts
-    ssum = 0
-    for Score in Scores:
-        # print(Score)
-        score = Score.text
-        print(score)
-        ssum += 1
-        print(f"评分为 {ssum}个")
-    # print(f"电影名: {name}\t评分:{score}")
     print(f"获取到 {Sum} 条热映的电影数据")
+
+# 获取电影评分
+    ssum = 0
+    temp=[]
+    for Score in Scores:
+        # print("-------------")
+        # print(Score)
+        # print("·····························")
+        score = Score.text
+        temp.append(score)
+        # print(score)
+        ssum += 1
+    print(f"评分为 {ssum}个")
+    # print(f"电影名: {name}\t评分:{score}")
+
+#对评分格式化
+    # endScore = [rating.strip() for rating in temp]
+    for SCORE in temp:
+        print(SCORE.strip())
+    # print(endScore)
     requests_get.close()
 
 
