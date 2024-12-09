@@ -98,33 +98,32 @@ def now():
     }
     requests_get = requests.get(url, headers=headers)
     page = BeautifulSoup(requests_get.text, "html.parser")
-    A = page.find("ul", class_="lists").find_all("a")
-    texts = []
+    A = page.find("ul", class_="lists").find_all("img")
+    # B = A.find("a", class_="ticket-btn").find_all("title")
+    # print(A)
+    Sum = 0
     for a in A:
-
-        name = a.find("a").get("title")
-        if name:  # 只处理非空的 title
-            texts.append(name)  # 添加有效的 title 到 texts
-
-        grand = a.find("span", class_="subject-rate")
-        print(grand)
-    print(texts)
-
-    print(texts.__len__())
+        Sum += 1
+        # print("++++++++++++++++++")
+        name = a.get("alt")
+        # if name:  # 只处理非空的 title
+        #     texts.append(name)  # 添加有效的 title 到 texts
+        print(name)
+    print(Sum)
+    # print(texts)
     requests_get.close()
 
 
 if __name__ == '__main__':
     v = False
     while not v:
-        In = input("你想要获取哪个资源：\n1:查询即将上演电影\n2:获取当前热映电影")
+        In = input("请输入获取的资源：\n1:查询即将上演电影\n2:获取当前热映电影")
         if In == "1":
             coming()
             v = True
             input("按任意键退出")
         elif In == "2":
             now()
-            # coming(header)
             v = True
         else:
             print("选项有误，请重新输入" + "\n\n")
