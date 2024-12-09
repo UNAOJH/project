@@ -98,19 +98,28 @@ def now():
     }
     requests_get = requests.get(url, headers=headers)
     page = BeautifulSoup(requests_get.text, "html.parser")
-    A = page.find("ul", class_="lists").find_all("img")
-    # B = A.find("a", class_="ticket-btn").find_all("title")
-    # print(A)
+    GetName = page.find("ul", class_="lists").find_all("img")
+    # B = GetName.find("a", class_="ticket-btn").find_all("title")
+    # print(GetName)
+    Scores = page.find("ul", class_="lists").find_all("li", class_='srating')
+    print(Scores)
+    # print(Scores.find('span', class_='subject-rate').text)
     Sum = 0
-    for a in A:
+    for Name in GetName:
         Sum += 1
         # print("++++++++++++++++++")
-        name = a.get("alt")
+        name = Name.get("alt")
         # if name:  # 只处理非空的 title
         #     texts.append(name)  # 添加有效的 title 到 texts
-        print(name)
-    print(Sum)
-    # print(texts)
+    ssum = 0
+    for Score in Scores:
+        # print(Score)
+        score = Score.text
+        print(score)
+        ssum += 1
+        print(f"评分为 {ssum}个")
+    # print(f"电影名: {name}\t评分:{score}")
+    print(f"获取到 {Sum} 条热映的电影数据")
     requests_get.close()
 
 
