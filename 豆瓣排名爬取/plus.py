@@ -17,7 +17,7 @@ logging.basicConfig(
 
 def coming():
     try:
-        url = "https://movie.douban.com/coming/11"
+        url = "https://movie.douban.com/coming/"
         headers = {
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 "
                           "Safari/537.36"
@@ -113,7 +113,7 @@ def coming():
 def now():
     try:
         global name, score, endScore
-        url = "https://movie.douban.com/cinema/nowplaying/changde/11"
+        url = "https://movie.douban.com/cinema/nowplaying/changde/"
         headers = {
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 "
                           "Safari/537.36"
