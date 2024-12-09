@@ -14,7 +14,7 @@ def coming():
 
     get = requests.get(url, headers=headers)
     etree_html = etree.HTML(get.text)
-
+    print("请求完成,等待获取...")
     html_content = '''
     <table>
         <thead>
@@ -53,7 +53,7 @@ def coming():
         print(top)
         print(G)
         f.write(
-            "\n" + '/' * (time_width + name_width) + nowTime + '\\' * (time_width + name_width) + "\n")
+            "\n\n\n" + "=" * (time_width + name_width) + nowTime + '=' * (time_width + name_width) + "\n")
         f.write(top + "\n")
         f.write(G + "\n")
         trs = etree_html.xpath('//*[@id="content"]/div/div[1]/table/tbody/tr')
@@ -82,7 +82,7 @@ def coming():
             i += 1
             # print(i)
             # break
-        print('=' * (time_width + name_width) + f"获取到 {i} 条数据" + '=' * (time_width + name_width))
+        print('-' * (time_width + name_width) + f"获取到 {i} 条数据" + '-' * (time_width + name_width))
         print(f"抓取资源已放置程序执行目录下,文件名为: {Filename}")
     with open("即将上演.txt", 'a', encoding="utf-8") as f:
         f.write('=' * (time_width + name_width) + f"获取到 {i} 条数据" + '=' * (
@@ -91,12 +91,15 @@ def coming():
 
 
 def now():
-    url = "https://movie.douban.com/cinema/nowplaying/changde/"
+    global name, score, endScore
+    # url = "https://movie.douban.com/cinema/nowplaying/changde/"
+    url = "https://movie.douban.com/explore"
     headers = {
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 "
                       "Safari/537.36"
     }
     requests_get = requests.get(url, headers=headers)
+    print("请求完成,等待获取...")
     page = BeautifulSoup(requests_get.text, "html.parser")
     GetName = page.find("ul", class_="lists").find_all("img")
     # B = GetName.find("a", class_="ticket-btn").find_all("title")
@@ -106,48 +109,80 @@ def now():
     # print(Scores)
     # print("=================")
     # print(Scores.find('span', class_='subject-rate').text)
+
     Sum = 0
-# 获取电影名
+    MovieNameList = []
+    # 获取电影名
     for Name in GetName:
         Sum += 1
-        # print("++++++++++++++++++")
         name = Name.get("alt")
-        # if name:  # 只处理非空的 title
-        #     texts.append(name)  # 添加有效的 title 到 texts
-    print(f"获取到 {Sum} 条热映的电影数据")
+        if name:  # 只处理非空的 title
+            MovieNameList.append(name)  # 添加有效的 title 到 texts
 
-# 获取电影评分
+    # 获取电影评分
     ssum = 0
-    temp=[]
+    scoreList = []
     for Score in Scores:
         # print("-------------")
         # print(Score)
         # print("·····························")
         score = Score.text
-        temp.append(score)
+        scoreList.append(score)
         # print(score)
         ssum += 1
-    print(f"评分为 {ssum}个")
-    # print(f"电影名: {name}\t评分:{score}")
+    # 对评分格式化
+    endScores = [score.strip() for score in scoreList]
+    FileName = "热映电影评分报告"   # 使用列表推导式去除空格
+    with open(f"{FileName}.txt", "a", encoding="utf-8") as f:
+        nowTime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        f.write(f"\n\n电影评分报告,生成时间{nowTime}\n\n")
+        # f.write("=" * 30 + "\n")
+        time_width = 5
+        name_width = 5
+        f.write('-' * (time_width + name_width) + nowTime + '-' * (time_width + name_width) + "\n")
 
-#对评分格式化
-    # endScore = [rating.strip() for rating in temp]
-    for SCORE in temp:
-        print(SCORE.strip())
-    # print(endScore)
+        # 检查是否有足够的电影名和评分
+        if len(MovieNameList) == len(endScores):
+            f.write(f"{'电影名':<10} {'评分':<5}\n")  # 格式化列标题
+            f.write("-" * 30 + "\n")  # 添加分隔线
+
+            # 拼接并输出电影名和对应评分
+            for name, score in zip(MovieNameList, endScores):
+                result = f"{name:<10} {score:<5}\n"
+                print(result)
+                f.write(result)
+            print(f"获取到 {Sum} 条热映的电影数据")
+            print(f"获取到 {ssum} 个评分")
+            f.write(f"获取到 {Sum} 条热映的电影数据"+"\n")
+            f.write(f"获取到 {ssum} 个评分"+"\n")
+            print(f'抓取资源已放置程序执行目录下,文件名为: "{FileName}"')
+        else:
+            print("电影名和评分数量不匹配，不能输出。"+"\n")
+
+    # 拼接
+    # print(f"电影名: {name}\t评分:{endScore}")
     requests_get.close()
 
 
 if __name__ == '__main__':
-    v = False
-    while not v:
-        In = input("请输入获取的资源：\n1:查询即将上演电影\n2:获取当前热映电影")
+    v = True
+    while v:
+        In = input("请输入获取的资源：\n1:查询即将上演电影\n2:获取当前热映电影\n3:退出程序\n")
         if In == "1":
+            print("正在请求,请稍后...")
             coming()
-            v = True
-            input("按任意键退出")
+            # input("按任意键退出...")
         elif In == "2":
+            print("正在请求,请稍后...")
             now()
-            v = True
+            # input("按任意键退出...")
+        elif In == "3":
+            print("退出程序...")
+            v = False
         else:
             print("选项有误，请重新输入" + "\n\n")
+        if v:  # 如果没有选择退出
+            continue_choice = input("是否继续选择？(y/n): ")
+            if continue_choice.lower() != 'y':  # 如果用户选择不是'y'
+                v = False  # 设置标志为 False，退出程序
+                print("退出程序...")
