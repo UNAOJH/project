@@ -30,7 +30,7 @@ pip install requests lxml beautifulsoup4
 
 1. 克隆本仓库到本地：  
    ```bash
-   git clone https://github.com/yourusername/movie-scraper.git
+   git clone https://github.com/UNAOJH/movie-scraper.git
    cd movie-scraper
    ```  
 
